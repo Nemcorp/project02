@@ -21,10 +21,15 @@ Create the `showPage` function
 This function will create and insert/append the elements needed to 
 display a "page" of nine students
 */
-
 function showPage(list, page) {
 	let startIndex = (page-1) * itemsPerPage;
 	let endIndex = page * itemsPerPage -1; 
+
+	// if last page of list, we might not have 9 students. Find out how
+	// many we should actually have
+	if(endIndex >= list.length) {
+		endIndex = list.length-1;
+	}
 
 	let studentList = document.querySelector(".student-list");
 	studentList.innerHTML = "";
@@ -50,12 +55,48 @@ function showPage(list, page) {
 	}
 }
 
-
+addPagination(data);
 
 /*
 Create the `addPagination` function
-This function will create and insert/append the elements needed for the pagination buttons
+This function will create and insert/append the elements 
+needed for the pagination buttons
 */
+function addPagination(list) {
+	var numPaginationButtons = Math.ceil(list.length/itemsPerPage);
+
+	let linkList = document.querySelector('.link-list');
+	linkList.innerHTML = "";
+
+	for(let i=1; i<=numPaginationButtons; i++) {
+		let buttonDomInfo = `
+			<li>
+				<button type="button">${i}</button>
+			</li>
+		`;
+		linkList.insertAdjacentHTML("beforeend", buttonDomInfo);
+	}
+
+	linkList.firstElementChild.firstElementChild.classList.add("active");
+
+	linkList.addEventListener("click", (e)=> {
+
+		if(e.target.tagName === "BUTTON"){
+			// remove active class from previous active element
+			for(let li of linkList.children) {
+				let button = li.firstElementChild;
+				button.classList.remove("active");
+			}
+
+			// add active class to clicked element
+			e.target.classList.add("active");
+		}
+
+		showPage(data, e.target.textContent);
+	});
+
+}
+
 
 
 
