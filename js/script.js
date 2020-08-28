@@ -209,11 +209,3 @@ function studentNameIncludes(student, desiredLetters) {
 
 
 
-
-
-
-
-
-// bugs
-
-// multiples of 45
