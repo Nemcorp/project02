@@ -152,7 +152,7 @@ function addSearchBar(){
 
 /**
 * Adds search logic to the search bar, generating a new list of student objects
-* for each click or keyup event
+* for each click or keyup event.
 */
 function addSearchBarEventHandler(){
 	const searchButton = document.querySelector("header button");
@@ -168,12 +168,17 @@ function addSearchBarEventHandler(){
 
 
 /**
-* 
+* Generates a list of new students based on the value typed into the input field. Creates
+* new pagination and shows new results
+*
+* @return {array} The list of student objects whose full name includes the string typed
+* 				  into the input field, case insensitive
 */
 function generateNewStudentList() {
 	let newStudentList = [];
 	const input = document.querySelector("#search");
-	let desiredLetters = input.value;
+	let desiredLetters = input.value.toLowerCase();
+	
 	// loop through data list to find matches
 	for(student of data){
 		if(studentNameIncludes(student, desiredLetters)){
@@ -187,7 +192,16 @@ function generateNewStudentList() {
 	return newStudentList;
 }
 
-
+/**
+* Determines if a student's name contains the desiredLetters. 
+*
+* @param {Object} student         The student whose name we will search for a substring
+* @param {str} 	  desiredLetters  The substring which we will search for in the student's name.
+*								  Must take lowercase letters.
+*
+* @return {boolean} True if student's full name includes 'desiredLetters'. False otherwise.
+* 				    
+*/
 function studentNameIncludes(student, desiredLetters) {
 	let studentName = student.name.first + " " + student.name.last;
 	return(studentName.toLowerCase().includes(desiredLetters));
@@ -200,3 +214,8 @@ function studentNameIncludes(student, desiredLetters) {
 
 
 
+// bugs
+
+// multiples of 45
+
+// capital letter search
