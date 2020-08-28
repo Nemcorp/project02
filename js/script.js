@@ -38,27 +38,36 @@ function showPage(list, page) {
 		endIndex = list.length-1;
 	}
 
+
+
 	let studentList = document.querySelector(".student-list");
 	studentList.innerHTML = "";
 
-	for(let i = startIndex; i <= endIndex; i ++) {
-		let student = list[i];
-		// decided not to use a conditional here. It's more efficient 
-		// to avoid looping through unecessary students
-		let studentDomInfo = `  
-			<li class="student-item cf">
-			    <div class="student-details">
-			      <img class="avatar" src="${student.picture.medium}" alt="Profile Picture">
-			      <h3> ${student.name.first} ${student.name.last} </h3>
-			      <span class="email"> ${student.email} </span>
-			    </div>
-			    <div class="joined-details">
-			      <span class="date">Joined ${student.registered.date}</span>
-			    </div>
-			</li>
-  		`;
-  		
-  		studentList.insertAdjacentHTML("beforeend", studentDomInfo);
+	// if no students are found, display "No students found"
+	if(list.length == 0){
+		studentList.innerHTML = `
+			<span>No results found</span>
+		`;
+	}else {
+		for(let i = startIndex; i <= endIndex; i ++) {
+			let student = list[i];
+			// decided not to use a conditional here. It's more efficient 
+			// to avoid looping through unecessary students
+			let studentDomInfo = `  
+				<li class="student-item cf">
+				    <div class="student-details">
+				      <img class="avatar" src="${student.picture.medium}" alt="Profile Picture">
+				      <h3> ${student.name.first} ${student.name.last} </h3>
+				      <span class="email"> ${student.email} </span>
+				    </div>
+				    <div class="joined-details">
+				      <span class="date">Joined ${student.registered.date}</span>
+				    </div>
+				</li>
+	  		`;
+	  		
+	  		studentList.insertAdjacentHTML("beforeend", studentDomInfo);
+		}
 	}
 }
 
@@ -82,25 +91,27 @@ function addPagination(list) {
 		linkList.insertAdjacentHTML("beforeend", buttonDomInfo);
 	}
 
-	linkList.firstElementChild.firstElementChild.classList.add("active");
+	if(list.length >0){
+		linkList.firstElementChild.firstElementChild.classList.add("active");
 
-	linkList.addEventListener("click", (e)=> {
-		let pageButton = e.target;
-		let pageNumber = pageButton.textContent;
+		linkList.addEventListener("click", (e)=> {
+			let pageButton = e.target;
+			let pageNumber = pageButton.textContent;
 
-		if(pageButton.tagName === "BUTTON"){
-			// remove active class from previous active element
-			for(let li of linkList.children) {
-				let button = li.firstElementChild;
-				button.classList.remove("active");
+			if(pageButton.tagName === "BUTTON"){
+				// remove active class from previous active element
+				for(let li of linkList.children) {
+					let button = li.firstElementChild;
+					button.classList.remove("active");
+				}
+
+				// add active class to clicked element
+				pageButton.classList.add("active");
 			}
 
-			// add active class to clicked element
-			pageButton.classList.add("active");
-		}
-
-		showPage(studentList, pageNumber);
-	});
+			showPage(studentList, pageNumber);
+		});
+	}
 
 }
 
@@ -131,6 +142,13 @@ function addSearchBarEventHandler(){
 		addPagination(studentList);
 		showPage(studentList,1);
 	});
+
+	const input = document.querySelector("#search");
+	input.addEventListener("keyup", ()=> {
+		studentList = generateNewStudentList();
+		addPagination(studentList);
+		showPage(studentList,1);
+	});
 }
 
 /**
@@ -152,6 +170,14 @@ function generateNewStudentList() {
 
 
 function studentNameIncludes(student, desiredLetters) {
-	return(student.name.first.toLowerCase().includes(desiredLetters) ||
-			student.name.last.toLowerCase().includes(desiredLetters)	);
+	let studentName = student.name.first + " " + student.name.last;
+	return(studentName.toLowerCase().includes(desiredLetters));
 }
+
+
+
+
+
+
+
+
