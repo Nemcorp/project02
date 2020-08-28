@@ -13,8 +13,15 @@ For assistance:
 
 
 const itemsPerPage = 9;
+var studentList = data;
 
-showPage(data, 2);
+
+// Call functions
+
+
+showPage(studentList, 1);
+addPagination(studentList);
+addSearchBar();
 
 /*
 Create the `showPage` function
@@ -55,8 +62,6 @@ function showPage(list, page) {
 	}
 }
 
-addPagination(data);
-
 /*
 Create the `addPagination` function
 This function will create and insert/append the elements 
@@ -80,8 +85,10 @@ function addPagination(list) {
 	linkList.firstElementChild.firstElementChild.classList.add("active");
 
 	linkList.addEventListener("click", (e)=> {
+		let pageButton = e.target;
+		let pageNumber = pageButton.textContent;
 
-		if(e.target.tagName === "BUTTON"){
+		if(pageButton.tagName === "BUTTON"){
 			// remove active class from previous active element
 			for(let li of linkList.children) {
 				let button = li.firstElementChild;
@@ -89,15 +96,62 @@ function addPagination(list) {
 			}
 
 			// add active class to clicked element
-			e.target.classList.add("active");
+			pageButton.classList.add("active");
 		}
 
-		showPage(data, e.target.textContent);
+		showPage(studentList, pageNumber);
 	});
 
 }
 
+/**
+* adds search bar to the header of the page
+*/
+function addSearchBar(){
+	const header = document.querySelector("header");
+	let searchBarDomInfo = `
+		<label for="search" class="student-search">
+		  <input id="search" placeholder="Search by name...">
+		  <button type="button"><img src="img/icn-search.svg" alt="Search icon"></button>
+		</label>
+	`;
+	header.insertAdjacentHTML("beforeend", searchBarDomInfo);
+
+	// add search bar event handler
+	addSearchBarEventHandler();
+}
+
+/**
+* 
+*/
+function addSearchBarEventHandler(){
+	const searchButton = document.querySelector("header button");
+	searchButton.addEventListener("click", ()=>{
+		studentList = generateNewStudentList();
+		addPagination(studentList);
+		showPage(studentList,1);
+	});
+}
+
+/**
+* 
+*/
+function generateNewStudentList() {
+	let newStudentList = [];
+	const input = document.querySelector("#search");
+	let desiredLetters = input.value;
+	// loop through data list to find matches
+	for(student of data){
+		if(studentNameIncludes(student, desiredLetters)){
+			newStudentList.push(student);
+		}
+	}
+
+	return newStudentList;
+}
 
 
-
-// Call functions
+function studentNameIncludes(student, desiredLetters) {
+	return(student.name.first.toLowerCase().includes(desiredLetters) ||
+			student.name.last.toLowerCase().includes(desiredLetters)	);
+}
