@@ -186,8 +186,8 @@ function generateNewStudentList() {
 		}
 	}
 
-	addPagination(studentList);
-	showPage(studentList,1);
+	addPagination(newStudentList);
+	showPage(newStudentList,1);
 
 	return newStudentList;
 }
@@ -217,5 +217,3 @@ function studentNameIncludes(student, desiredLetters) {
 // bugs
 
 // multiples of 45
-
-// capital letter search
