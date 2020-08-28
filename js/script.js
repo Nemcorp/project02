@@ -12,11 +12,43 @@ For assistance:
 */
 
 
+const itemsPerPage = 9;
+
+showPage(data, 2);
 
 /*
 Create the `showPage` function
-This function will create and insert/append the elements needed to display a "page" of nine students
+This function will create and insert/append the elements needed to 
+display a "page" of nine students
 */
+
+function showPage(list, page) {
+	let startIndex = (page-1) * itemsPerPage;
+	let endIndex = page * itemsPerPage -1; 
+
+	let studentList = document.querySelector(".student-list");
+	studentList.innerHTML = "";
+
+	for(let i = startIndex; i <= endIndex; i ++) {
+		let student = list[i];
+		// decided not to use a conditional here. It's more efficient 
+		// to avoid looping through unecessary students
+		let studentDomInfo = `  
+			<li class="student-item cf">
+			    <div class="student-details">
+			      <img class="avatar" src="${student.picture.medium}" alt="Profile Picture">
+			      <h3> ${student.name.first} ${student.name.last} </h3>
+			      <span class="email"> ${student.email} </span>
+			    </div>
+			    <div class="joined-details">
+			      <span class="date">Joined ${student.registered.date}</span>
+			    </div>
+			</li>
+  		`;
+  		
+  		studentList.insertAdjacentHTML("beforeend", studentDomInfo);
+	}
+}
 
 
 
