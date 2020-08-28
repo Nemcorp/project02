@@ -16,17 +16,34 @@ const itemsPerPage = 9;
 var studentList = data;
 
 
+
 // Call functions
+init();
 
+/**
+* Initializes page by adding the students, pagination, and a search bar.
+*/
+function init() {
+	showPage(studentList, 1);
+	addPagination(studentList);
+	addSearchBar();
+}
 
-showPage(studentList, 1);
-addPagination(studentList);
-addSearchBar();
 
 /*
 Create the `showPage` function
 This function will create and insert/append the elements needed to 
 display a "page" of nine students
+*/
+
+/**
+* Creates and adds the dom elements for students on a chosen page. Will display
+* "No Results Found" if list is <1
+*
+* @param {array} list - The complete array of student objects we will select
+*						from to populate the page. 
+* @param {int} 	 page - The page number that we want to display. (EG page == 2
+*						will display students 9 - 17, given 9 itemsPerPage)
 */
 function showPage(list, page) {
 	let startIndex = (page-1) * itemsPerPage;
@@ -44,7 +61,7 @@ function showPage(list, page) {
 	studentList.innerHTML = "";
 
 	// if no students are found, display "No students found"
-	if(list.length == 0){
+	if(list.length < 1){
 		studentList.innerHTML = `
 			<span>No results found</span>
 		`;
@@ -71,10 +88,11 @@ function showPage(list, page) {
 	}
 }
 
-/*
-Create the `addPagination` function
-This function will create and insert/append the elements 
-needed for the pagination buttons
+/**
+* Adds pagination buttons to the bottom of the page
+*
+* @param {array} list - The complete array of student objects we wish to 
+*						include for a given search.
 */
 function addPagination(list) {
 	var numPaginationButtons = Math.ceil(list.length/itemsPerPage);
@@ -116,7 +134,7 @@ function addPagination(list) {
 }
 
 /**
-* adds search bar to the header of the page
+* Adds search bar to the header of the page. Adds an event handler for search functionality.
 */
 function addSearchBar(){
 	const header = document.querySelector("header");
@@ -133,23 +151,21 @@ function addSearchBar(){
 }
 
 /**
-* 
+* Adds search logic to the search bar, generating a new list of student objects
+* for each click or keyup event
 */
 function addSearchBarEventHandler(){
 	const searchButton = document.querySelector("header button");
 	searchButton.addEventListener("click", ()=>{
 		studentList = generateNewStudentList();
-		addPagination(studentList);
-		showPage(studentList,1);
 	});
 
 	const input = document.querySelector("#search");
 	input.addEventListener("keyup", ()=> {
 		studentList = generateNewStudentList();
-		addPagination(studentList);
-		showPage(studentList,1);
 	});
 }
+
 
 /**
 * 
@@ -164,6 +180,9 @@ function generateNewStudentList() {
 			newStudentList.push(student);
 		}
 	}
+
+	addPagination(studentList);
+	showPage(studentList,1);
 
 	return newStudentList;
 }
